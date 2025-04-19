@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "task-tracker-app"
+version = "0.1.0"
+description = ""
+authors = ["vtitoff <v.titoff2010@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "4.2"
+psycopg2 = "2.9.10"
+gunicorn = "23.0.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+  "E", "F", "W",
+  "UP", "B", "C4",
+  "I", "ANN",
+  "PL",
+]
+ignore = ["PD012", "ANN201"]
+
+[tool.ruff.format]
+quote-style = "double"
