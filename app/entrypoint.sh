@@ -7,4 +7,4 @@ exec gunicorn config.wsgi:application \
     --threads 2 \
     --timeout 120 \
     --access-logfile - \
-    --error-logfile -
+    --error-logfile - \
