@@ -26,6 +26,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/site.conf:/etc/nginx/conf.d/site.conf
       - ./nginx/logs/:/var/log/nginx/
+      - ./app/static:/opt/app/static/
     depends_on:
       - tracker_app
     ports:
