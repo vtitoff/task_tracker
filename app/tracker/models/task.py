@@ -9,7 +9,7 @@ User = get_user_model()
 class Task(TimeStampedMixin):
     queue = models.ForeignKey(Queue, on_delete=models.CASCADE, related_name="tasks")
     number_in_queue = models.PositiveIntegerField(editable=False)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="authored_tasks")
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="authored_tasks", null=True)
     assignee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="assigned_tasks")
     watchers = models.ManyToManyField(User, related_name="watching_tasks", blank=True)
     tags = models.ManyToManyField(Tag, related_name="tasks", blank=True)

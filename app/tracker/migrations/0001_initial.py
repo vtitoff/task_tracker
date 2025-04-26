@@ -23,9 +23,9 @@ class Migration(migrations.Migration):
                 ("modified", models.DateTimeField(auto_now=True)),
                 (
                     "key",
-                    models.CharField(editable=False, max_length=50, primary_key=True, serialize=False, unique=True),
+                    models.CharField(max_length=50, primary_key=True, serialize=False, unique=True),
                 ),
-                ("name", models.CharField(editable=False, max_length=100, unique=True)),
+                ("name", models.CharField(max_length=100, unique=True)),
             ],
             options={
                 "abstract": False,
@@ -39,7 +39,6 @@ class Migration(migrations.Migration):
                 (
                     "name",
                     models.CharField(
-                        editable=False,
                         max_length=50,
                         primary_key=True,
                         serialize=False,
