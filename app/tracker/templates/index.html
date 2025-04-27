@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+<h2>Список очередей</h2>
+{% for queue in queues %}
+<p><a href="{% url 'queue' queue.key %}">{{queue.key}}</a></p>
+{% endfor %}
+</body>
+</html>
