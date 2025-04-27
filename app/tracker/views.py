@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.views.generic import TemplateView, DetailView
-from .models import Queue
+from .models import Queue, Task
 
 
 class QueuesView(TemplateView):
@@ -17,6 +17,9 @@ class QueueDetailView(DetailView):
     model = Queue
     slug_field = "key"
     slug_url_kwarg = "key"
-    # extra_context = {
-    #     'title': '<UNK> <UNK>',
-    # }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_queue = self.object
+        context["tasks"] = Task.objects.filter(queue=current_queue).order_by("number_in_queue")
+        return context

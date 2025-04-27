@@ -5,6 +5,9 @@
     <title>{{queue.key}}</title>
 </head>
 <body>
-{{queue.key}} {{queue.name}}
+<h2>{{queue.key}} {{queue.name}}</h2>
+{% for task in tasks %}
+<p>{{task.task_key}} {{task.subject}}</p>
+{% endfor %}
 </body>
 </html>
