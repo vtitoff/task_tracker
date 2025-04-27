@@ -7,7 +7,7 @@
 <body>
 <h2>{{queue.key}} {{queue.name}}</h2>
 {% for task in tasks %}
-<p>{{task.task_key}} {{task.subject}}</p>
+<p><a href="{% url 'task' task.task_key %}">{{task.task_key}} {{task.subject}}</a></p>
 {% endfor %}
 </body>
 </html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{task.key}}</title>
+</head>
+<body>
+<a href="{% url 'queue' task.queue.key %}">{{task.queue.key}}</a>
+<h2>{{task.key}} {{task.subject}}</h2>
+<p>Author: {{task.author}}</p>
+<p>Assignee: {{task.assignee}}</p>
+<p>Watchers: {{task.watchers}}</p>
+<p>Status: {{task.status}}</p>
+<p>Tags: {{task.tags}}</p>
+<p></p>
+<p>{{task.description}}</p>
+</body>
+</html>

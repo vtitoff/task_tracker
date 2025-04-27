@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, DetailView
 from .models import Queue, Task
 
@@ -23,3 +24,19 @@ class QueueDetailView(DetailView):
         current_queue = self.object
         context["tasks"] = Task.objects.filter(queue=current_queue).order_by("number_in_queue")
         return context
+
+
+class TaskDetailView(DetailView):
+    template_name = "task_detail.html"
+    model = Task
+
+    def get_object(self):
+        task_key = self.kwargs.get("task_key")
+        try:
+            queue_key, task_number = task_key.split("-")
+        except ValueError:
+            raise Http404("Invalid task key format")
+
+        return get_object_or_404(
+            Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
+        )
