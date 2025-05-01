@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, CreateView
 from .models import Queue, Task
-from .forms import AddTaskForm
+from .forms import AddTaskForm, AddQueueForm
 
 
 class QueuesView(TemplateView):
@@ -48,7 +48,9 @@ class AddTask(CreateView):
     form_class = AddTaskForm
     template_name = "add_task.html"
     success_url = reverse_lazy("index")
-    # extra_context = {
-    #     'menu': menu,
-    #     'title': 'Добавление статьи',
-    # }
+
+
+class AddQueue(CreateView):
+    form_class = AddQueueForm
+    template_name = "add_queue.html"
+    success_url = reverse_lazy("index")

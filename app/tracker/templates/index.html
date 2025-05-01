@@ -6,6 +6,7 @@
 </head>
 <body>
 <h2>Список очередей</h2>
+<p><a href="{% url 'create_queue' %}">Создать очередь</a></p>
 {% for queue in queues %}
 <p><a href="{% url 'queue' queue.key %}">{{queue.key}}</a></p>
 {% endfor %}
