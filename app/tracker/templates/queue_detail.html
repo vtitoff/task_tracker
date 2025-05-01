@@ -8,7 +8,7 @@
 <h2>{{queue.key}} {{queue.name}}</h2>
 <p><a href="{% url 'queue_create_task' queue.key %}">Создать задачу</a></p>
 {% for task in tasks %}
-<p><a href="{% url 'task' task.task_key %}">{{task.task_key}} {{task.subject}}</a></p>
+<p><a href="{% url 'task' task.task_key %}">{{task.task_key}} {{task.subject}} {{task.status}}</a></p>
 {% endfor %}
 </body>
 </html>

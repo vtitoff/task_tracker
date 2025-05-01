@@ -3,7 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, CreateView
 from .models import Queue, Task
-from .forms import AddTaskForm, AddQueueForm
+from .forms import AddTaskForm, AddQueueForm, TaskStatusChangeForm
+from django.contrib import messages
 
 
 class QueuesView(TemplateView):
@@ -42,6 +43,23 @@ class TaskDetailView(DetailView):
         return get_object_or_404(
             Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["status_form"] = TaskStatusChangeForm(instance=self.object)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        task = self.get_object()
+        form = TaskStatusChangeForm(request.POST, instance=task)
+
+        if form.is_valid():
+            if request.user == task.author or request.user == task.assignee:
+                form.save()
+                messages.success(request, "Статус обновлен!")
+            else:
+                messages.error(request, "Нет прав для изменения статуса")
+        return self.get(request, *args, **kwargs)
 
 
 class AddTask(CreateView):

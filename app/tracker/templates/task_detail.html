@@ -7,10 +7,28 @@
 <body>
 <a href="{% url 'queue' task.queue.key %}">{{task.queue.key}}</a>
 <h2>{{task.key}} {{task.subject}}</h2>
+<div class="status-section">
+  <h4>Текущий статус:</h4>
+  <form method="post">
+    {% csrf_token %}
+    {{ status_form.status }}
+
+    {% if messages %}
+    <div class="status-messages">
+      {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </form>
+</div>
+<h2>{{ task.subject }}</h2>
+<p>{{ task.description }}</p>
 <p>Author: {{task.author}}</p>
 <p>Assignee: {{task.assignee}}</p>
 <p>Watchers: {{task.watchers}}</p>
-<p>Status: {{task.status}}</p>
 <p>Tags: {{task.tags}}</p>
 <p></p>
 <p>{{task.description}}</p>
