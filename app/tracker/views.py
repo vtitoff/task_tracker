@@ -1,7 +1,9 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, DetailView, CreateView
 from .models import Queue, Task
+from .forms import AddTaskForm
 
 
 class QueuesView(TemplateView):
@@ -40,3 +42,13 @@ class TaskDetailView(DetailView):
         return get_object_or_404(
             Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
         )
+
+
+class AddTask(CreateView):
+    form_class = AddTaskForm
+    template_name = "add_task.html"
+    success_url = reverse_lazy("index")
+    # extra_context = {
+    #     'menu': menu,
+    #     'title': 'Добавление статьи',
+    # }

@@ -10,3 +10,6 @@ class Queue(UUIDMixin, TimeStampedMixin):
     key = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.key
