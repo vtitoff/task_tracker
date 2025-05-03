@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Task, Queue
+from .models import Task, Queue, Tag
 
 
 class AddTaskForm(forms.ModelForm):
@@ -34,3 +34,7 @@ class TaskDescriptionChangeForm(forms.ModelForm):
         model = Task
         fields = ["description"]
         widgets = {"description": forms.Textarea(attrs={"class": "form-control", "onchange": "this.form.submit()"})}
+
+
+class TaskTagsChangeForm(forms.Form):
+    tag = forms.CharField(max_length=255, label="Название тега")

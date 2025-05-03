@@ -2,8 +2,15 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, CreateView
-from .models import Queue, Task
-from .forms import AddTaskForm, AddQueueForm, TaskStatusChangeForm, TaskAssigneeChangeForm, TaskDescriptionChangeForm
+from .models import Queue, Task, Tag
+from .forms import (
+    AddTaskForm,
+    AddQueueForm,
+    TaskStatusChangeForm,
+    TaskAssigneeChangeForm,
+    TaskDescriptionChangeForm,
+    TaskTagsChangeForm,
+)
 from django.contrib import messages
 
 
@@ -49,6 +56,7 @@ class TaskDetailView(DetailView):
         context["status_form"] = TaskStatusChangeForm(instance=self.object)
         context["assignee_form"] = TaskAssigneeChangeForm(instance=self.object)
         context["description_form"] = TaskDescriptionChangeForm(instance=self.object)
+        context["tags_form"] = TaskTagsChangeForm()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -69,6 +77,19 @@ class TaskDetailView(DetailView):
         form = TaskDescriptionChangeForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
+
+        form = TaskTagsChangeForm(request.POST)
+        if form.is_valid():
+            tag = Tag.objects.get_or_create(name=form.cleaned_data["tag"])
+            task_key = self.kwargs.get("task_key")
+            queue_key, task_number = task_key.split("-")
+            task = get_object_or_404(
+                Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
+            )
+            if tag[0] in task.tags.all():
+                task.tags.remove(tag[0])
+            else:
+                task.tags.add(tag[0])
 
         return self.get(request, *args, **kwargs)
 

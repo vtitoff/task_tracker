@@ -24,8 +24,10 @@
         <p>{{task.watchers}}</p>
 
         <h4>Теги:</h4>
-        <p>{{task.tags}}</p>
-
+        {% for tag in task.tags.all %}
+        <p>{{tag.name}}</p>
+        {% endfor %}
+        <form><p>{{tags_form.tag}}</p> <button type="submit">Добавить/убрать тег</button></form>
         <h4>Описание:</h4>
         <p>{{description_form.description}}</p>
 
