@@ -8,30 +8,37 @@
 <a href="{% url 'queue' task.queue.key %}">{{task.queue.key}}</a>
 <h2>{{task.key}} {{task.subject}}</h2>
 <div class="status-section">
-  <h4>Текущий статус:</h4>
-  <form method="post">
-    {% csrf_token %}
-    {{ status_form.status }}
-    {{ assignee_form.assignee }}
+    <form method="post">
+        {% csrf_token %}
 
-    {% if messages %}
-    <div class="status-messages">
-      {% for message in messages %}
-        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
-          {{ message }}
+        <h4>Текущий статус:</h4>
+        {{ status_form.status }}
+
+        <h4>Исполнитель:</h4>
+        <p>{{ assignee_form.assignee }}</p>
+
+        <h4>Автор:</h4>
+        <p>{{task.author}}</p>
+
+        <h4>Наблюдатели:</h4>
+        <p>{{task.watchers}}</p>
+
+        <h4>Теги:</h4>
+        <p>{{task.tags}}</p>
+
+        <h4>Описание:</h4>
+        <p>{{description_form.description}}</p>
+
+        {% if messages %}
+        <div class="status-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
         </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </form>
+        {% endif %}
+    </form>
 </div>
-<h2>{{ task.subject }}</h2>
-<p>{{ task.description }}</p>
-<p>Author: {{task.author}}</p>
-<p>Assignee: {{task.assignee}}</p>
-<p>Watchers: {{task.watchers}}</p>
-<p>Tags: {{task.tags}}</p>
-<p></p>
-<p>{{task.description}}</p>
 </body>
 </html>

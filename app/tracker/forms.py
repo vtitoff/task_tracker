@@ -27,3 +27,10 @@ class TaskAssigneeChangeForm(forms.ModelForm):
         model = Task
         fields = ["assignee"]
         widgets = {"assignee": forms.Select(attrs={"class": "form-control", "onchange": "this.form.submit()"})}
+
+
+class TaskDescriptionChangeForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["description"]
+        widgets = {"description": forms.Textarea(attrs={"class": "form-control", "onchange": "this.form.submit()"})}
