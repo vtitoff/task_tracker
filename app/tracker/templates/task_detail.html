@@ -12,6 +12,7 @@
   <form method="post">
     {% csrf_token %}
     {{ status_form.status }}
+    {{ assignee_form.assignee }}
 
     {% if messages %}
     <div class="status-messages">

@@ -20,3 +20,10 @@ class TaskStatusChangeForm(forms.ModelForm):
         model = Task
         fields = ["status"]
         widgets = {"status": forms.Select(attrs={"class": "form-control", "onchange": "this.form.submit()"})}
+
+
+class TaskAssigneeChangeForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["assignee"]
+        widgets = {"assignee": forms.Select(attrs={"class": "form-control", "onchange": "this.form.submit()"})}
