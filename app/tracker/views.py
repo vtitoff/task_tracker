@@ -1,5 +1,3 @@
-import traceback
-
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -15,11 +13,6 @@ from .forms import (
     TaskCommentForm,
 )
 from django.contrib import messages
-
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 
 class QueuesView(TemplateView):
@@ -86,17 +79,15 @@ class TaskDetailView(DetailView):
         form = TaskDescriptionChangeForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
-        try:
-            form = TaskCommentForm(request.POST)
-            if form.is_valid():
-                task_key = self.kwargs.get("task_key")
-                queue_key, task_number = task_key.split("-")
-                task = get_object_or_404(
-                    Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
-                )
-                comment = Comment.objects.create(comment=form.cleaned_data["comment"], task=task, owner=request.user)
-        except Exception:
-            logger.error(traceback.format_exc())
+
+        form = TaskCommentForm(request.POST)
+        if form.is_valid():
+            task_key = self.kwargs.get("task_key")
+            queue_key, task_number = task_key.split("-")
+            task = get_object_or_404(
+                Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
+            )
+            Comment.objects.create(comment=form.cleaned_data["comment"], task=task, owner=request.user)
         return self.get(request, *args, **kwargs)
 
 
