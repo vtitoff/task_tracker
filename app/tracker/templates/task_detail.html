@@ -28,7 +28,7 @@
         <p>{{tag.name}}</p>
         {% endfor %}
     </form>
-    <form action="" method="post">{% csrf_token %}<p>{{tags_form.tag}}</p>
+    <form action="change_tags/" method="post">{% csrf_token %}<p>{{tags_form.tag}}</p>
         <button type="submit">Добавить/убрать тег</button>
     </form>
     <h4>Описание:</h4>
