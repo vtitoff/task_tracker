@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Task, Queue, Tag
+from .models import Task, Queue, Tag, Comment
 
 
 class AddTaskForm(forms.ModelForm):
@@ -38,3 +38,7 @@ class TaskDescriptionChangeForm(forms.ModelForm):
 
 class TaskTagsChangeForm(forms.Form):
     tag = forms.CharField(max_length=255, label="Название тега")
+
+
+class TaskCommentForm(forms.Form):
+    comment = forms.CharField(max_length=5000, label="Текст комментария")

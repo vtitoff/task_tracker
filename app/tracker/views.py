@@ -1,8 +1,10 @@
-from django.http import HttpResponse, Http404
+import traceback
+
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, CreateView
-from .models import Queue, Task, Tag
+from .models import Queue, Task, Tag, Comment
 from .forms import (
     AddTaskForm,
     AddQueueForm,
@@ -10,8 +12,14 @@ from .forms import (
     TaskAssigneeChangeForm,
     TaskDescriptionChangeForm,
     TaskTagsChangeForm,
+    TaskCommentForm,
 )
 from django.contrib import messages
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class QueuesView(TemplateView):
@@ -57,6 +65,7 @@ class TaskDetailView(DetailView):
         context["assignee_form"] = TaskAssigneeChangeForm(instance=self.object)
         context["description_form"] = TaskDescriptionChangeForm(instance=self.object)
         context["tags_form"] = TaskTagsChangeForm()
+        context["comments_form"] = TaskCommentForm()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -91,6 +100,17 @@ class TaskDetailView(DetailView):
             else:
                 task.tags.add(tag[0])
 
+        try:
+            form = TaskCommentForm(request.POST)
+            if form.is_valid():
+                task_key = self.kwargs.get("task_key")
+                queue_key, task_number = task_key.split("-")
+                task = get_object_or_404(
+                    Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
+                )
+                comment = Comment.objects.create(comment=form.cleaned_data["comment"], task=task, owner=request.user)
+        except Exception:
+            logger.error(traceback.format_exc())
         return self.get(request, *args, **kwargs)
 
 

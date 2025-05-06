@@ -27,20 +27,38 @@
         {% for tag in task.tags.all %}
         <p>{{tag.name}}</p>
         {% endfor %}
-        <form><p>{{tags_form.tag}}</p> <button type="submit">Добавить/убрать тег</button></form>
-        <h4>Описание:</h4>
-        <p>{{description_form.description}}</p>
-
-        {% if messages %}
-        <div class="status-messages">
-            {% for message in messages %}
-            <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
     </form>
+    <form action="" method="post">{% csrf_token %}<p>{{tags_form.tag}}</p>
+        <button type="submit">Добавить/убрать тег</button>
+    </form>
+    <h4>Описание:</h4>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>{{description_form.description}}</p>
+        <button type="submit">Сохранить</button>
+    </form>
+    {% if messages %}
+    <div class="status-messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+<div class="comment-section">
+    <h4>Комментарии:</h4>
+    <form action="" method="post">{% csrf_token %}{{comments_form.comment}}
+        <p>
+            <button type="submit">Отправить</button>
+        </p>
+    </form>
+    {% for comment in task.comments.all %}
+    <p>{{comment.owner}} {{comment.created}}</p>
+    <p>{{comment.comment}}</p>
+    <p></p>
+    {% endfor %}
 </div>
 </body>
 </html>
