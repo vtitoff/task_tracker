@@ -3,12 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <title>{{queue.key}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8rem;
+        }
+
+        .btn {
+            background: #2d8cf0;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #1e6ebf;
+            transform: translateY(-1px);
+        }
+
+        .tasks-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .task-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            transition: transform 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-card:hover {
+            transform: translateX(5px);
+            border-color: #2d8cf0;
+        }
+
+        .task-link {
+            color: #1a1a1a;
+            text-decoration: none;
+            flex-grow: 1;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .task-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            background: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .task-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<h2>{{queue.key}} {{queue.name}}</h2>
-<p><a href="{% url 'queue_create_task' queue.key %}">Создать задачу</a></p>
-{% for task in tasks %}
-<p><a href="{% url 'task' task.task_key %}">{{task.task_key}} {{task.subject}} {{task.status}}</a></p>
-{% endfor %}
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h2>📌 {{queue.key}} - {{queue.name}}</h2>
+            </div>
+            <a href="{% url 'queue_create_task' queue.key %}" class="btn">
+                ➕ Создать задачу
+            </a>
+        </div>
+
+        <div class="tasks-list">
+            {% for task in tasks %}
+            <div class="task-card">
+                <a href="{% url 'task' task.task_key %}" class="task-link">
+                    <div class="task-meta">
+                        <span class="task-key">{{task.task_key}}</span>
+                        <span class="task-subject">{{task.subject}}</span>
+                    </div>
+                </a>
+                {% if task.status %}
+                <span class="task-status">{{task.status.name}}</span>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                🧐 В этой очереди пока нет задач
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>

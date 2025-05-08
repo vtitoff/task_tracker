@@ -3,12 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8rem;
+        }
+
+        .btn {
+            background: #2d8cf0;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #1e6ebf;
+            transform: translateY(-1px);
+        }
+
+        .queues-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .queue-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            transition: transform 0.2s ease;
+        }
+
+        .queue-card:hover {
+            transform: translateX(5px);
+            border-color: #2d8cf0;
+        }
+
+        .queue-link {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+        }
+
+        .queue-link::before {
+            content: '📌';
+            margin-right: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<h2>Список очередей</h2>
-<p><a href="{% url 'create_queue' %}">Создать очередь</a></p>
-{% for queue in queues %}
-<p><a href="{% url 'queue' queue.key %}">{{queue.key}}</a></p>
-{% endfor %}
+    <div class="container">
+        <div class="page-header">
+            <h2>📋 Список очередей</h2>
+            <a href="{% url 'create_queue' %}" class="btn">
+                ➕ Создать очередь
+            </a>
+        </div>
+
+        <div class="queues-list">
+            {% for queue in queues %}
+            <div class="queue-card">
+                <a href="{% url 'queue' queue.key %}" class="queue-link">
+                    {{ queue.key }} - {{ queue.name }}
+                </a>
+            </div>
+            {% empty %}
+            <div class="queue-card">
+                <p>Нет созданных очередей</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>
