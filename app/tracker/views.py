@@ -61,57 +61,42 @@ class TaskDetailView(DetailView):
         context["comments_form"] = TaskCommentForm()
         return context
 
-    def post(self, request, *args, **kwargs):
-        task = self.get_object()
+    def handle_task_forms(self, request, task):
+        form_type = request.POST.get("form_type")
+
+        if not form_type:
+            messages.error(request, "Не указан тип формы")
+            return
+
+        handlers = {
+            "status": self.handle_status_form,
+            "assignee": self.handle_assignee_form,
+            "description": self.handle_description_form,
+            "tags": self.handle_tags_form,
+            "comment": self.handle_comment_form,
+        }
+
+        handler = handlers.get(form_type)
+
+        return handler(request, task)
+
+    def handle_status_form(self, request, task):
         form = TaskStatusChangeForm(request.POST, instance=task)
 
         if form.is_valid():
-            if request.user == task.author or request.user == task.assignee:
-                form.save()
-                messages.success(request, "Задача обновлена!")
-            else:
-                messages.error(request, "Нет прав для изменения статуса")
+            form.save()
 
+    def handle_assignee_form(self, request, task):
         form = TaskAssigneeChangeForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
 
+    def handle_description_form(self, request, task):
         form = TaskDescriptionChangeForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
 
-        form = TaskCommentForm(request.POST)
-        if form.is_valid():
-            task_key = self.kwargs.get("task_key")
-            queue_key, task_number = task_key.split("-")
-            task = get_object_or_404(
-                Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
-            )
-            Comment.objects.create(comment=form.cleaned_data["comment"], task=task, owner=request.user)
-        return self.get(request, *args, **kwargs)
-
-
-class ChangeTags(DetailView):
-    template_name = "task_detail.html"
-    model = Task
-
-    def get_object(self):
-        task_key = self.kwargs.get("task_key")
-        try:
-            queue_key, task_number = task_key.split("-")
-        except ValueError:
-            raise Http404("Invalid task key format")
-
-        return get_object_or_404(
-            Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["tags_form"] = TaskTagsChangeForm()
-        return context
-
-    def post(self, request, *args, **kwargs):
+    def handle_tags_form(self, request, task):
         form = TaskTagsChangeForm(request.POST)
         task_key = self.kwargs.get("task_key")
         if form.is_valid():
@@ -124,7 +109,24 @@ class ChangeTags(DetailView):
                 task.tags.remove(tag[0])
             else:
                 task.tags.add(tag[0])
+
         return redirect("task", task_key=task_key, permanent=True)
+
+    def handle_comment_form(self, request, task):
+        form = TaskCommentForm(request.POST)
+        task_key = self.kwargs.get("task_key")
+        if form.is_valid():
+            queue_key, task_number = task_key.split("-")
+            task = get_object_or_404(
+                Task.objects.select_related("queue"), queue__key=queue_key, number_in_queue=task_number
+            )
+            Comment.objects.create(comment=form.cleaned_data["comment"], task=task, owner=request.user)
+        return redirect("task", task_key=task_key, permanent=True)
+
+    def post(self, request, *args, **kwargs):
+        task = self.get_object()
+        response = self.handle_task_forms(request, task)
+        return response or self.get(request, *args, **kwargs)
 
 
 class AddTask(CreateView):

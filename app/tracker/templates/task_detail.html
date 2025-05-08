@@ -12,10 +12,18 @@
         {% csrf_token %}
 
         <h4>Текущий статус:</h4>
-        {{ status_form.status }}
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="status">
+            {{ status_form.status }}
+        </form>
 
         <h4>Исполнитель:</h4>
-        <p>{{ assignee_form.assignee }}</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="assignee">
+            <p>{{ assignee_form.assignee }}</p>
+        </form>
 
         <h4>Автор:</h4>
         <p>{{task.author}}</p>
@@ -28,12 +36,14 @@
         <p>{{tag.name}}</p>
         {% endfor %}
     </form>
-    <form action="change_tags/" method="post">{% csrf_token %}<p>{{tags_form.tag}}</p>
+    <form action="" method="post">{% csrf_token %}<p>{{tags_form.tag}}</p>
+        <input type="hidden" name="form_type" value="tags">
         <button type="submit">Добавить/убрать тег</button>
     </form>
     <h4>Описание:</h4>
     <form action="" method="post">
         {% csrf_token %}
+        <input type="hidden" name="form_type" value="description">
         <p>{{description_form.description}}</p>
         <button type="submit">Сохранить</button>
     </form>
@@ -49,7 +59,9 @@
 </div>
 <div class="comment-section">
     <h4>Комментарии:</h4>
-    <form action="" method="post">{% csrf_token %}{{comments_form.comment}}
+    <form action="" method="post">{% csrf_token %}
+        <input type="hidden" name="form_type" value="comment">
+        {{comments_form.comment}}
         <p>
             <button type="submit">Отправить</button>
         </p>
