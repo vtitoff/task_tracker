@@ -1,3 +1,5 @@
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView, LogoutView
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -144,3 +146,12 @@ class AddQueue(CreateView):
     form_class = AddQueueForm
     template_name = "add_queue.html"
     success_url = reverse_lazy("index")
+
+
+class Login(LoginView):
+    form_class = AuthenticationForm
+    template_name = "login.html"
+
+
+class Logout(LogoutView):
+    template_name = "logout.html"
