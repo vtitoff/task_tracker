@@ -12,7 +12,7 @@ class AddTaskForm(forms.ModelForm):
 class AddQueueForm(forms.ModelForm):
     class Meta:
         model = Queue
-        fields = "__all__"
+        fields = ["key", "name"]
 
 
 class TaskStatusChangeForm(forms.ModelForm):
