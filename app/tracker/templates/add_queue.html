@@ -103,13 +103,13 @@
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="{{ form.key.id_for_label }}">Ключ очереди:</label>
+                <label for="{{form.key.id_for_label}}">Ключ очереди:</label>
                 {{form.key}}
                 <small class="form-text">Только заглавные латинские буквы</small>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.name.id_for_label }}">Название очереди:</label>
+                <label for="{{form.name.id_for_label}}">Название очереди:</label>
                 {{form.name}}
             </div>
 
